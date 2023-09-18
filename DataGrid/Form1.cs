@@ -125,5 +125,43 @@ namespace DataGrid
                 }
             }
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            ShowRowByIndex2(3);
+        }
+
+        private void ShowRowByIndex2(int index)
+        {
+            string connectionString = "Data Source=database.sqlite;Version=3;";
+            string query = $"SELECT * FROM MyTable LIMIT 1 OFFSET {index};"; // Замените "YourTableName" на имя вашей таблицы
+
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    try
+                    {
+                        connection.Open();
+                        SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+
+                        if (dataTable.Rows.Count > 0)
+                        {
+                            dataGridView1.DataSource = dataTable;
+                        }
+                        else
+                        {
+                            MessageBox.Show("No data found in the table.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("An error occurred: " + ex.Message);
+                    }
+                }
+            }
+        }
     }
 }
